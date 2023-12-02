@@ -2,14 +2,7 @@
 version: 2
 updates:
   - package-ecosystem: "docker"
-    directory: "/ci"
-    schedule:
-      interval: "weekly"
-      time: "09:00"
-      timezone: "Europe/Berlin"
-
-  - package-ecosystem: "docker"
-    directory: "/ubuntu-full"
+    directory: "/"
     schedule:
       interval: "weekly"
       time: "09:00"
