@@ -1,2 +1,3 @@
+[![lint](https://github.com/veerendra2/docker-images/actions/workflows/lint.yml/badge.svg)](https://github.com/veerendra2/docker-images/actions/workflows/lint.yml)
 # Docker Images
-Dockerfiles to builds images for various tools mainly intend used in ci/cd pipelines and dev setup.
+Dockerfiles to build images with various tools mainly intend use in ci/cd pipelines and dev setup.
