@@ -1,5 +1,4 @@
 FROM ubuntu:22.04
-MAINTAINER veerendra.k
 RUN apt-get update && \
   apt-get -y install wget sudo
 RUN useradd \
