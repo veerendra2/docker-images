@@ -1,15 +1,15 @@
 FROM alpine:3.18.3
 
 # ------ packages target arch ------
-ARG TERRAFORM_ARCH="amd64"
-ARG TMATE_ARCH="amd64"
+ARG TERRAFORM_ARCH=amd64
+ARG TMATE_ARCH=amd64
 
 # ------ packages target os ------
-ARG TERRAFORM_OS="linux"
+ARG TERRAFORM_OS=linux
 
 # ------ packages versions ------
-ARG TERRAFORM_VERSION="1.5.7"
-ARG TMATE_VERSION="2.4.0"
+ARG TERRAFORM_VERSION=1.5.7
+ARG TMATE_VERSION=2.4.0
 
 COPY requirements.txt /requirements.txt
 RUN apk add --update --no-cache && \
