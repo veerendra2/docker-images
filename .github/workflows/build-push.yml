@@ -54,9 +54,9 @@ jobs:
           platforms: linux/arm64
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/ci:arm64
           build-args:
-            - TERRAFORM_ARCH=arm64
-            - TMATE_ARCH=arm64v8
-            - TERRAFORM_OS=linux
+            TERRAFORM_ARCH=arm64
+            TMATE_ARCH=arm64v8
+            TERRAFORM_OS=linux
 
       - name: Build and push [darwin arm64]
         uses: docker/build-push-action@v5
@@ -65,8 +65,7 @@ jobs:
           context: ci
           platforms: linux/arm64
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/ci:darwin_arm64
-          build-args:
-            - TERRAFORM_ARCH=arm64
-            - TMATE_ARCH=arm64v8
-            - TERRAFORM_OS=darwin
-
+          build-args: |
+            TERRAFORM_ARCH=arm64
+            TMATE_ARCH=arm64v8
+            TERRAFORM_OS=darwin
