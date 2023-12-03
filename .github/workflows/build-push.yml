@@ -34,8 +34,8 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           push: true
-          context: ./ci
-          file: ./ci/Dockerfile
+          context: ci
+          file: ci/Dockerfile
           platforms: linux/amd64
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/ci:amd64
 
@@ -43,11 +43,11 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           push: true
-          context: ./ci
-          file: ./ci/Dockerfile
+          context: ci
+          file: ci/Dockerfile
           platforms: linux/arm64
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/ci:arm64
-          build-args:
+          build-args: |
             TERRAFORM_ARCH=arm64
             TMATE_ARCH=arm64v8
             TERRAFORM_OS=linux
@@ -56,8 +56,8 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           push: true
-          context: ./ci
-          file: ./ci/Dockerfile
+          context: ci
+          file: ci/Dockerfile
           platforms: linux/arm64
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/ci:darwin_arm64
           build-args: |
