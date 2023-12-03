@@ -34,7 +34,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           push: true
-          context: ci
+          context: /ci
           platforms: linux/amd64
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/ci:amd64
 
@@ -42,7 +42,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           push: true
-          context: ci
+          context: /ci
           platforms: linux/arm64
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/ci:arm64
           build-args:
@@ -54,7 +54,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           push: true
-          context: ci
+          context: /ci
           platforms: linux/arm64
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/ci:darwin_arm64
           build-args: |
