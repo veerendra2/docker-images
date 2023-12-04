@@ -1,9 +1,15 @@
 ---
 version: 2
 updates:
-  - package-ecosystem: "docker"
-    directory: "/"
+  - package-ecosystem: docker
+    directory: /
     schedule:
-      interval: "weekly"
-      time: "09:00"
+      interval: weekly
+      day: sunday
+      timezone: "Europe/Berlin"
+  - package-ecosystem: pip
+    directory: /
+    schedule:
+      interval: weekly
+      day: sunday
       timezone: "Europe/Berlin"
