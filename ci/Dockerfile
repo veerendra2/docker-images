@@ -13,7 +13,7 @@ ARG TMATE_VERSION=2.4.0
 
 COPY requirements.txt /requirements.txt
 RUN apk add --update --no-cache \
-  python3 py3-pip jq git \
+  python3 py3-pip jq git openssh-client \
   python3-dev libffi-dev build-base && \
   wget -qO terraform.zip https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_${TERRAFORM_OS}_${TERRAFORM_ARCH}.zip && \
   wget -qO tmate.tar.xz https://github.com/tmate-io/tmate/releases/download/${TMATE_VERSION}/tmate-${TMATE_VERSION}-static-linux-${TMATE_ARCH}.tar.xz && \
