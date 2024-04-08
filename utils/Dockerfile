@@ -15,7 +15,8 @@ RUN apk add --update --no-cache \
   # install packages
   python3 py3-pip jq git openssh-client openssl \
   python3-dev libffi-dev build-base rclone \
-  iproute2-ss bind-tools curl iperf3 nmap
+  iproute2-ss bind-tools curl iperf3 nmap \
+  postgresql-client; \
   
   # download binary tools
   wget -qO terraform.zip https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_${ARCH}.zip; \
