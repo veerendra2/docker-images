@@ -12,7 +12,24 @@ on:
         default: 'yes'
 
 jobs:
-  docker:
+  setup-matrix:
+    runs-on: ubuntu-22.04
+    outputs:
+      matrix: ${{ steps.setup-matrix.outputs.matrix }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      
+      - name: Setup Matrix
+        id: setup-matrix
+        run: |
+          MATRIX=$(git diff --find-renames=100% --name-only $(git merge-base remotes/origin/master $(git rev-parse --abbrev-ref HEAD)) | grep '^[a-zA-Z0-9\-]*\/' | sed 's#/.*##g' | sort -u | jq -R -s -c 'split("\n")[:-1]')
+          echo "matrix=${MATRIX}" >> $GITHUB_OUTPUT
+          jq <<< "${MATRIX}"
+
+  docker-build-push:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
@@ -33,16 +50,18 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Build and push [linux amd64]
+      - name: Build and push [amd64]
         uses: docker/build-push-action@v5
         with:
           push: true
           context: ./ci
           file: ./ci/Dockerfile
           platforms: linux/amd64
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/ci:amd64
+          tags:
+            - ${{ secrets.DOCKERHUB_USERNAME }}/ci:latest
+            - ${{ secrets.DOCKERHUB_USERNAME }}/ci:amd64
 
-      - name: Build and push [linux arm64]
+      - name: Build and push [arm64]
         uses: docker/build-push-action@v5
         with:
           push: true
@@ -51,19 +70,6 @@ jobs:
           platforms: linux/arm64
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/ci:arm64
           build-args: |
-            TERRAFORM_ARCH=arm64
+            ARCH=arm64
             TMATE_ARCH=arm64v8
-            TERRAFORM_OS=linux
-
-      - name: Build and push [darwin arm64]
-        uses: docker/build-push-action@v5
-        with:
-          push: true
-          context: ./ci
-          file: ./ci/Dockerfile
-          platforms: linux/arm64
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/ci:darwin_arm64
-          build-args: |
-            TERRAFORM_ARCH=arm64
-            TMATE_ARCH=arm64v8
-            TERRAFORM_OS=darwin
+            

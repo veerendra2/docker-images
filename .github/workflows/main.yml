@@ -1,0 +1,59 @@
+---
+name: Main workflow
+
+on:
+  push:
+    tags:
+      - "**"
+
+jobs:
+  continuous-delivery:
+    name: Continuous Delivery
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+      
+      - uses: actions-ecosystem/action-regex-match@v2
+        id: matcher
+        with:
+          text: ${{ github.ref }}
+          regex: '^refs\/tags\/([\w-]+)\/(.*)$'
+      
+      - name: Validate Tag
+        run: |
+          # shellcheck disable=all
+          if "${{ steps.matcher.outputs.match == '' }}"; then
+            echo "no tag found"
+            exit 1
+          fi
+          # shellcheck disable=all
+          if [ ! ls "${{ steps.matcher.outputs.group1 }}" 2> /dev/null ]; then
+            echo "invalid tag"
+            exit 1
+          fi
+        
+      - name: setup qemu
+        uses: docker/setup-qemu-action@v3
+        with:
+          image: tonistiigi/binfmt:latest
+          platforms: amd64,arm64
+      
+      - name: setup buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Login to Registry
+        uses: docker/login-action@v3
+        with:
+          registry: 
+          username: ${{ secrets.ARTIFACTORY_USERNAME }}
+          password: ${{ secrets.ARTIFACTORY_PASSWORD }}
+
+      - name: Build and push
+        uses: docker/build-push-action@v5
+        with:
+          context: ${{ steps.matcher.outputs.group1 }}
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: sb-images/custom-images/${{ steps.matcher.outputs.group1 }}:${{ steps.matcher.outputs.group2 }}
+        
