@@ -16,8 +16,7 @@ ARG KUBECTL_VERSION=v1.29.2
 RUN apk add --no-cache --virtual .build-deps \
   # install packages
   python3 jq git openssh-client openssl \
-  iproute2-ss bind-tools curl iperf3 nmap \
-  postgresql-client; \
+  iproute2-ss bind-tools curl iperf3 nmap; \
   
   # download binary tools
   wget -qO terraform.zip https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_${GENERIC_ARCH_NAME}.zip; \
@@ -28,7 +27,7 @@ RUN apk add --no-cache --virtual .build-deps \
   mv terraform /usr/local/bin/; \
 
   # cleanup
-  rm -rf terraform* /requirements.txt
+  rm -rf terraform*
 
 COPY --from=install /root/.local /root/.local
 ENV PATH=/root/.local/bin:$PATH

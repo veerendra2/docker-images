@@ -34,7 +34,7 @@ RUN apk add --no-cache --virtual .build-deps \
   mv tmate-${TMATE_VERSION}-static-linux-${TMATE_ARCH}/tmate /usr/local/bin/; \
 
   # cleanup
-  rm -rf terraform* tmate* terraform-docs* /requirements.txt
+  rm -rf terraform* tmate* terraform-docs*
 
 COPY --from=install /root/.local /root/.local
 ENV PATH=/root/.local/bin:$PATH
