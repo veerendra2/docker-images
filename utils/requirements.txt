@@ -1,6 +1,3 @@
-GitPython
-yamllint
-pylint
 jinja2
 jmespath
 ansible
