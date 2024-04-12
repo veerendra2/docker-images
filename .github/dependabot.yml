@@ -48,13 +48,6 @@ updates:
       timezone: "Europe/Berlin"
 
   - package-ecosystem: "docker"
-    directory: "/terraform"
-    schedule:
-      interval: "weekly"
-      time: "09:00"
-      timezone: "Europe/Berlin"
-
-  - package-ecosystem: "docker"
     directory: "/utils"
     schedule:
       interval: "weekly"
