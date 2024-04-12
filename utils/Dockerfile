@@ -25,7 +25,7 @@ RUN apt-get update; \
   # install packages
   apt-get install -y --no-install-recommends \
   python3 jq git curl nmap openssh-client openssl \
-  iproute2 dnsutils curl iperf3 rclone vim; \
+  iproute2 dnsutils curl iperf3 rclone; \
   # download binary tools
   wget -qO terraform.zip https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_${GENERIC_ARCH_NAME}.zip; \
   wget -qO /usr/local/bin/kubectl https://dl.k8s.io/release/${KUBECTL_VERSION}/bin/linux/${GENERIC_ARCH_NAME}/kubectl; \
