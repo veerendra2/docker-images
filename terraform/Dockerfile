@@ -1,4 +1,4 @@
-FROM alpine:3.18.3
+FROM alpine:3.19.1
 # ------ target arch ------
 ARG GENERIC_ARCH_NAME=amd64
 ARG TMATE_ARCH=amd64
