@@ -16,6 +16,7 @@ on:
 
 jobs:
   setup-matrix:
+    name: Setup Matrix
     runs-on: ubuntu-22.04
     outputs:
       matrix: ${{ steps.setup-matrix.outputs.matrix }}
@@ -23,27 +24,36 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0
+          fetch-depth: 2
 
-      - name: Setup Matrix
+      - name: Setup Matrix [Only Changed]
+        if: $ {{ github.event_name == 'push' }}
         id: setup-matrix
         run: |
           MATRIX=$(git diff --find-renames=100% --name-only --diff-filter=d HEAD^ | grep '^[a-zA-Z0-9\-]*\/' | sed 's#/.*##g' | sort -u | jq -R -s -c 'split("\n")[:-1]')
           echo "matrix=${MATRIX}" >> $GITHUB_OUTPUT
           jq <<< "${MATRIX}"
 
+      - name: Setup Matrix [All]
+        if: $ {{ github.event_name == 'workflow_dispatch' || github.event_name == 'schedule' }}
+        id: setup-matrix
+        run: |
+          MATRIX=$(ls -d */ | grep '^[a-zA-Z0-9\-]*\/' | sed 's#/.*##g' | sort -u | jq -R -s -c 'split("\n")[:-1]')
+          echo "matrix=${MATRIX}" >> $GITHUB_OUTPUT
+          jq <<< "${MATRIX}"
+
   continuous-delivery:
     name: Continuous Delivery
     runs-on: ubuntu-22.04
+    needs: setup-matrix
+    if: needs.setup-matrix.outputs.matrix != '[]'
+    strategy:
+      fail-fast: false
+      matrix:
+        docker-dir: ${{ fromJSON(needs.setup-matrix.outputs.matrix) }}
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
-
-      - uses: actions-ecosystem/action-regex-match@v2
-        id: matcher
-        with:
-          text: ${{ github.ref }}
-          regex: '^refs\/tags\/([\w-]+)\/(.*)$'
 
       - name: setup qemu
         uses: docker/setup-qemu-action@v3
@@ -57,27 +67,28 @@ jobs:
       - name: Login to Registry
         uses: docker/login-action@v3
         with:
-          registry:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Build and push [AMD64]
+      - name: Build and Push [AMD64]
         uses: docker/build-push-action@v5
         with:
-          context: ${{ steps.matcher.outputs.group1 }}
+          context: ${{ matrix.docker-dir }}
+          file: ${{ matrix.docker-dir }}/Dockerfile
           platforms: linux/amd64
           push: true
-          tags:
-            ${{ secrets.DOCKERHUB_USERNAME }}/${{ steps.matcher.outputs.group1 }}:latest
-            ${{ secrets.DOCKERHUB_USERNAME }}/${{ steps.matcher.outputs.group1 }}:amd64
+          tags: |
+            ${{ secrets.DOCKERHUB_USERNAME }}/${{ matrix.docker-dir }}:latest
+            ${{ secrets.DOCKERHUB_USERNAME }}/${{ matrix.docker-dir }}:amd64
 
-      - name: Build and push [ARM64]
+      - name: Build and Push [ARM64]
         uses: docker/build-push-action@v5
         with:
-          context: ${{ steps.matcher.outputs.group1 }}
+          context: ${{ matrix.docker-dir }}
+          file: ${{ matrix.docker-dir }}/Dockerfile
           platforms: linux/arm64
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/${{ steps.matcher.outputs.group1 }}:arm64
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/${{ matrix.docker-dir }}:arm64
           build-args: |
             ARCH=arm64
             TMATE_ARCH=arm64v8

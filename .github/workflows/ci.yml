@@ -1,5 +1,5 @@
 ---
-name: ci
+name: CI
 on:
   pull_request:
     paths:
@@ -7,6 +7,7 @@ on:
 
 jobs:
   setup-matrix:
+    name: Setup Matrix
     runs-on: ubuntu-22.04
     outputs:
       matrix: ${{ steps.setup-matrix.outputs.matrix }}
@@ -24,6 +25,7 @@ jobs:
           jq <<< "${MATRIX}"
 
   super-linter:
+    name: Super Linter
     runs-on: ubuntu-22.04
     steps:
       - name: Checkout Code
@@ -40,6 +42,7 @@ jobs:
           VALIDATE_ALL_CODEBASE: false
 
   docker-build:
+    name: Docker Build Test
     runs-on: ubuntu-22.04
     needs: setup-matrix
     if: needs.setup-matrix.outputs.matrix != '[]'
