@@ -15,11 +15,11 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      
+
       - name: Setup Matrix
         id: setup-matrix
         run: |
-          MATRIX=$(git diff --find-renames=100% --name-only $(git merge-base remotes/origin/master $(git rev-parse --abbrev-ref HEAD)) | grep '^[a-zA-Z0-9\-]*\/' | sed 's#/.*##g' | sort -u | jq -R -s -c 'split("\n")[:-1]')
+          MATRIX=$(git diff --find-renames=100% --name-only $(git merge-base remotes/origin/main $(git rev-parse --abbrev-ref HEAD)) | grep '^[a-zA-Z0-9\-]*\/' | sed 's#/.*##g' | sort -u | jq -R -s -c 'split("\n")[:-1]')
           echo "matrix=${MATRIX}" >> $GITHUB_OUTPUT
           jq <<< "${MATRIX}"
 
@@ -30,7 +30,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      
+
       - name: Lint Code Base
         uses: github/super-linter@v5
         env:
@@ -50,13 +50,13 @@ jobs:
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
-      
+
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
-      
+
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
-      
+
       - name: Build
         id: docker_build
         uses: docker/build-push-action@v5
