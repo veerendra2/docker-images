@@ -1,9 +1,8 @@
-jinja2
-jmespath
-ansible
-jc
+GitPython
 yamllint
 pylint
+jinja2
+jc
 black
 isort
 requests

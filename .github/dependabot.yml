@@ -7,9 +7,3 @@ updates:
       interval: weekly
       day: sunday
       timezone: "Europe/Berlin"
-  - package-ecosystem: pip
-    directory: /
-    schedule:
-      interval: weekly
-      day: sunday
-      timezone: "Europe/Berlin"
