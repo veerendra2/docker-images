@@ -1,4 +1,4 @@
-FROM alpine:3.18.3 as build
+FROM alpine:3.19.1 as build
 RUN apk add --update --no-cache --virtual .build-deps \
     gcc build-base musl-dev libffi-dev python3 python3-dev \
     py-pip
@@ -8,7 +8,7 @@ RUN pip3 install --user -r requirements.txt \
     --break-system-packages \
     --no-warn-script-location
 
-FROM alpine:3.18.3
+FROM alpine:3.19.1
 # ------ target arch ------
 ARG GENERIC_ARCH_NAME=amd64
 ARG TMATE_ARCH=amd64
