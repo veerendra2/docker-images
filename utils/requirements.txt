@@ -1,0 +1,10 @@
+jinja2
+jmespath
+ansible
+jc
+yamllint
+pylint
+black
+isort
+requests
+beautifulsoup4

@@ -1,0 +1,9 @@
+GitPython
+yamllint
+pylint
+jinja2
+jc
+black
+isort
+requests
+beautifulsoup4

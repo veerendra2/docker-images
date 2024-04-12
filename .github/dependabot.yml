@@ -1,0 +1,55 @@
+---
+version: 2
+updates:
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      time: "09:00"
+      timezone: "Europe/Berlin"
+    groups:
+      pipeline-dependencies:
+        patterns:
+          - "*"
+
+  # - package-ecosystem: "docker"
+  #   directory: "/ansible"
+  #   schedule:
+  #     interval: "weekly"
+  #     time: "09:00"
+  #     timezone: "Europe/Berlin"
+
+  # - package-ecosystem: "docker"
+  #   directory: "/ci-full"
+  #   schedule:
+  #     interval: "weekly"
+  #     time: "09:00"
+  #     timezone: "Europe/Berlin"
+
+  - package-ecosystem: docker
+    directory: "/nextcloud"
+    schedule:
+      interval: "weekly"
+      time: "09:00"
+      timezone: "Europe/Berlin"
+
+  # - package-ecosystem: "docker"
+  #   directory: "/python3"
+  #   schedule:
+  #     interval: "weekly"
+  #     time: "09:00"
+  #     timezone: "Europe/Berlin"
+
+  # - package-ecosystem: "docker"
+  #   directory: "/terraform"
+  #   schedule:
+  #     interval: "weekly"
+  #     time: "09:00"
+  #     timezone: "Europe/Berlin"
+
+  # - package-ecosystem: "docker"
+  #   directory: "/utils"
+  #   schedule:
+  #     interval: "weekly"
+  #     time: "09:00"
+  #     timezone: "Europe/Berlin"
