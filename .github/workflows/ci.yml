@@ -42,7 +42,7 @@ jobs:
           VALIDATE_ALL_CODEBASE: false
 
   docker-build:
-    name: Docker Build Test
+    name: Test Docker Build
     runs-on: ubuntu-22.04
     needs: setup-matrix
     if: needs.setup-matrix.outputs.matrix != '[]'

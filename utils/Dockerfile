@@ -6,7 +6,6 @@ RUN apt-get update; \
 COPY requirements.txt .
 RUN pip3 install --user -r requirements.txt \
     --no-cache-dir \
-    --break-system-packages \
     --no-warn-script-location
 
 FROM ubuntu:22.04
