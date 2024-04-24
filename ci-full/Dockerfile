@@ -20,7 +20,7 @@ ARG KUBECTL_VERSION=v1.29.2
 
 RUN apk add --no-cache --virtual .build-deps \
   # install packages
-  python3 jq git; \
+  python3 jq git openssh-client openssl; \
   # download binary tools
   wget -qO terraform.zip https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_${GENERIC_ARCH_NAME}.zip; \
   wget -qO tmate.tar.xz https://github.com/tmate-io/tmate/releases/download/${TMATE_VERSION}/tmate-${TMATE_VERSION}-static-linux-${TMATE_ARCH}.tar.xz; \

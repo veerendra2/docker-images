@@ -9,6 +9,7 @@ RUN pip3 install --user -r requirements.txt \
 
 FROM python:3.11-alpine3.19
 
-RUN apk add --no-cache --virtual .build-deps jq
+RUN apk add --no-cache --virtual .build-deps jq \
+    openssh-client openssl
 COPY --from=build /root/.local /root/.local
 ENV PATH=/root/.local/bin:$PATH
