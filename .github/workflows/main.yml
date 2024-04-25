@@ -29,7 +29,7 @@ jobs:
       - name: Setup Matrix
         id: setup-matrix
         run: |
-          if [[ $BRANCH == 'master' && $GITHUB_EVENT_NAME == 'push' ]]; then
+          if [[ $BRANCH == 'main' && $GITHUB_EVENT_NAME == 'push' ]]; then
             MATRIX=$(git diff --find-renames=100% --name-only --diff-filter=d HEAD^ | grep '^[a-zA-Z0-9\-]*\/' | sed 's#/.*##g' | sort -u | jq -R -s -c 'split("\n")[:-1]')
           else
             MATRIX=$(ls -d */ | grep '^[a-zA-Z0-9\-]*\/' | sed 's#/.*##g' | sort -u | jq -R -s -c 'split("\n")[:-1]')
