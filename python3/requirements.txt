@@ -7,3 +7,4 @@ black
 isort
 requests
 beautifulsoup4
+loguru
