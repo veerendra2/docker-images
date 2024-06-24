@@ -67,7 +67,7 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Build and Push [AMD64]
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           context: ${{ matrix.docker-dir }}
           file: ${{ matrix.docker-dir }}/Dockerfile
@@ -78,7 +78,7 @@ jobs:
             ${{ secrets.DOCKERHUB_USERNAME }}/${{ matrix.docker-dir }}:amd64
 
       - name: Build and Push [ARM64]
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           context: ${{ matrix.docker-dir }}
           file: ${{ matrix.docker-dir }}/Dockerfile
