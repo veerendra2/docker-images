@@ -1,4 +1,4 @@
-FROM nextcloud:29.0.5-apache
+FROM nextcloud:29.0.6-apache
 RUN apt-get update && \
     apt-get install -y --no-install-recommends ffmpeg && \
     rm -rf /var/lib/apt/lists/*
