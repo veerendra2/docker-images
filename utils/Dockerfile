@@ -1,40 +1,34 @@
-FROM ubuntu:22.04 as build
-RUN apt-get update; \
-    apt-get install -y --no-install-recommends gcc \
-    python3 python3-dev python3-pip; \
-    rm -rf /var/lib/apt/lists/*
+FROM ubuntu:24.04 AS build
 COPY requirements.txt .
-RUN pip3 install --user -r requirements.txt \
-    --no-cache-dir \
-    --no-warn-script-location
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+    curl gnupg software-properties-common jq gcc python3 python3-dev python3-pip && \
+    curl -fsSL https://apt.releases.hashicorp.com/gpg | gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg && \
+    echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | tee /etc/apt/sources.list.d/hashicorp.list && \
+    curl -fsSL "https://pkgs.k8s.io/core:/stable:/$(curl -L -s https://dl.k8s.io/release/stable.txt | awk 'BEGIN{FS=OFS="."} NF>2{print $(NF-2), $(NF-1)}')/deb/Release.key" | gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg && \
+    echo "deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/$(curl -L -s https://dl.k8s.io/release/stable.txt | awk 'BEGIN{FS=OFS="."} NF>2{print $(NF-2), $(NF-1)}')/deb/ /" | tee /etc/apt/sources.list.d/kubernetes.list && \
+    apt-get update && \
+    apt-get install -y terraform kubectl && \
+    rm -rf /var/lib/apt/lists/* apt-key.gpg && \
+    pip3 install --user -r requirements.txt --no-cache-dir --no-warn-script-location --break-system-packages
 
-FROM ubuntu:22.04
+FROM ubuntu:24.04
 
-# ------ target arch ------
-ARG GENERIC_ARCH_NAME=amd64
-ARG TMATE_ARCH=amd64
+RUN useradd -ms /bin/bash util && \
+    apt-get update && \
+    apt-get install -y --no-install-recommends \
+    python3 python3-pip jq git curl nmap openssh-client \
+    iproute2 dnsutils iperf3 rclone vim tmate openssl ssh
 
-# ------ packages versions ------
-ARG TERRAFORM_VERSION=1.5.7
-ARG TMATE_VERSION=2.4.0
-ARG TERRAFORM_DOCS_VERSION=v0.17.0
-ARG KUBECTL_VERSION=v1.29.2
+COPY --from=build /usr/bin/terraform /usr/bin/terraform
+COPY --from=build /usr/bin/kubectl /usr/bin/kubectl
+COPY --from=build /root/.local /home/util/.local
 
-RUN apt-get update; \
-  # install packages
-  apt-get install -y --no-install-recommends \
-  python3 jq git curl nmap openssh-client openssl \
-  iproute2 dnsutils curl iperf3 rclone vim; \
-  # download binary tools
-  wget -qO terraform.zip https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_${GENERIC_ARCH_NAME}.zip; \
-  wget -qO /usr/local/bin/kubectl https://dl.k8s.io/release/${KUBECTL_VERSION}/bin/linux/${GENERIC_ARCH_NAME}/kubectl; \
-  # install tools
-  unzip terraform.zip; \
-  chmod +x /usr/local/bin/kubectl \
-  mv terraform /usr/local/bin/; \
-  # cleanup
-  rm -rf terraform*; \
-  rm -rf /var/lib/apt/lists/*
+RUN chown util:util -R /home/util/.local
 
-COPY --from=build /root/.local /root/.local
-ENV PATH=/root/.local/bin:$PATH
+ENV PATH=/home/util/.local/bin:$PATH
+
+WORKDIR /home/util
+USER util
+
+CMD ["/bin/bash"]

@@ -1,39 +1,31 @@
-FROM alpine:3.18.3 as build
-RUN apk add --update --no-cache --virtual .build-deps \
-    gcc build-base musl-dev libffi-dev python3 python3-dev \
-    py-pip
+FROM ubuntu:24.04 AS build
 COPY requirements.txt .
-RUN pip3 install --user -r requirements.txt \
-    --no-cache-dir \
-    --break-system-packages \
-    --no-warn-script-location
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+    curl gnupg software-properties-common jq gcc python3 python3-dev python3-pip && \
+    curl -fsSL https://apt.releases.hashicorp.com/gpg | gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg && \
+    echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | tee /etc/apt/sources.list.d/hashicorp.list && \
+    curl -fsSL "https://pkgs.k8s.io/core:/stable:/$(curl -L -s https://dl.k8s.io/release/stable.txt | awk 'BEGIN{FS=OFS="."} NF>2{print $(NF-2), $(NF-1)}')/deb/Release.key" | gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg && \
+    echo "deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/$(curl -L -s https://dl.k8s.io/release/stable.txt | awk 'BEGIN{FS=OFS="."} NF>2{print $(NF-2), $(NF-1)}')/deb/ /" | tee /etc/apt/sources.list.d/kubernetes.list && \
+    apt-get update && \
+    apt-get install -y terraform kubectl && \
+    rm -rf /var/lib/apt/lists/* apt-key.gpg && \
+    pip3 install --user -r requirements.txt --no-cache-dir --no-warn-script-location --break-system-packages
 
-FROM alpine:3.18.3
-# ------ target arch ------
-ARG GENERIC_ARCH_NAME=amd64
-ARG TMATE_ARCH=amd64
-# ------ packages versions ------
-ARG TERRAFORM_VERSION=1.5.7
-ARG TMATE_VERSION=2.4.0
-ARG TERRAFORM_DOCS_VERSION=v0.17.0
-ARG KUBECTL_VERSION=v1.29.2
+FROM ubuntu:24.04
 
-RUN apk add --no-cache --virtual .build-deps \
-  # install packages
-  python3 jq git openssh-client openssl; \
-  # download binary tools
-  wget -qO terraform.zip https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_${GENERIC_ARCH_NAME}.zip; \
-  wget -qO tmate.tar.xz https://github.com/tmate-io/tmate/releases/download/${TMATE_VERSION}/tmate-${TMATE_VERSION}-static-linux-${TMATE_ARCH}.tar.xz; \
-  wget -qO terraform-docs.tar.gz https://github.com/terraform-docs/terraform-docs/releases/download/${TERRAFORM_DOCS_VERSION}/terraform-docs-${TERRAFORM_DOCS_VERSION}-linux-${GENERIC_ARCH_NAME}.tar.gz; \
-  wget -qO /usr/local/bin/kubectl https://dl.k8s.io/release/${KUBECTL_VERSION}/bin/linux/${GENERIC_ARCH_NAME}/kubectl; \
-  # install tools
-  unzip terraform.zip; \
-  tar -xf tmate.tar.xz; \
-  tar -xf terraform-docs.tar.gz; \
-  mv terraform* /usr/local/bin/; \
-  mv tmate-${TMATE_VERSION}-static-linux-${TMATE_ARCH}/tmate /usr/local/bin/; \
-  # cleanup
-  rm -rf terraform* tmate* terraform-docs*
+RUN useradd -ms /bin/bash ci && \
+    apt-get update && \
+    apt-get install -y --no-install-recommends \
+    tmate jq
 
-COPY --from=build /root/.local /root/.local
-ENV PATH=/root/.local/bin:$PATH
+COPY --from=build /usr/bin/terraform /usr/bin/terraform
+COPY --from=build /usr/bin/kubectl /usr/bin/kubectl
+COPY --from=build /root/.local /home/ci/.local
+
+RUN chown ci:ci -R /home/ci/.local
+
+ENV PATH=/home/ci/.local/bin:$PATH
+
+WORKDIR /home/ci
+USER ci
