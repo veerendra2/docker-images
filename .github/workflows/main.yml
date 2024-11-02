@@ -36,8 +36,8 @@ jobs:
           echo "matrix=${MATRIX}" >> $GITHUB_OUTPUT
           jq <<< "${MATRIX}"
 
-  continuous-delivery:
-    name: Continuous Delivery
+  docker-build:
+    name: Docker Build
     runs-on: ubuntu-24.04
     needs: setup-matrix
     if: needs.setup-matrix.outputs.matrix != '[]'
@@ -75,7 +75,7 @@ jobs:
             ${{ secrets.DOCKERHUB_USERNAME }}/${{ matrix.docker-dir }}:latest
 
   custom-builds:
-    name: Docker Custom Build
+    name: Custom Docker Build
     runs-on: ubuntu-24.04
     if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
     steps:
