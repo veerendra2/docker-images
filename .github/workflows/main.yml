@@ -31,7 +31,7 @@ jobs:
           if [[ "${{ github.event_name }}" == "schedule" || "${{ github.event_name }}" == "workflow_dispatch" ]]; then
             MATRIX=$(ls -d */ | sed 's#/##' | jq -R -s -c 'split("\n")[:-1]')
           else
-            MATRIX=$(git diff --find-renames=100% --name-only $(git merge-base remotes/origin/main $(git rev-parse --abbrev-ref HEAD)) | grep '^[a-zA-Z0-9\-]*\/' | sed 's#/.*##g' | sort -u | jq -R -s -c 'split("\n")[:-1]')
+             MATRIX=$(git diff --find-renames=100% --name-only HEAD^ HEAD | grep '^[a-zA-Z0-9\-]*\/' | sed 's#/.*##g' | sort -u | jq -R -s -c 'split("\n")[:-1]')
           fi
           echo "matrix=${MATRIX}" >> $GITHUB_OUTPUT
           jq <<< "${MATRIX}"
