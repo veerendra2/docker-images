@@ -9,7 +9,7 @@ DIR_NAME=$(tar -tf ${LATEST_TAG}.tar.gz | head -1)
 tar -xf ${LATEST_TAG}.tar.gz
 pushd ${DIR_NAME} 1>/dev/null
 sed -i '/RUN pnpm build/i ENV BASE_URL="/it-tools/"' Dockerfile
-docker build --platform linux/arm64/v8,linux/amd64 -t veerendra2/it-tools:latest .
+docker buildx --platform linux/arm64/v8,linux/amd64 -t veerendra2/it-tools:latest .
 docker push veerendra2/it-tools:latest
 
 # ----------------------- pwgen multi arch docker image -----------------------
@@ -18,5 +18,5 @@ curl -sSOL "https://github.com/jocxfin/pwgen/archive/refs/tags/${LATEST_TAG}.tar
 DIR_NAME=$(tar -tf ${LATEST_TAG}.tar.gz | head -1
 tar -xf ${LATEST_TAG}.tar.gz
 pushd ${DIR_NAME} 1>/dev/null
-docker build --platform linux/arm64/v8,linux/amd64 -t veerendra2/pwgen:latest .
+docker buildx build --platform linux/arm64/v8,linux/amd64 -t veerendra2/pwgen:latest .
 docker push veerendra2/pwgen:latest
