@@ -1,9 +1,9 @@
-FROM python:3.11-alpine3.19 AS build
+FROM python:3.13-alpine3.19 AS build
 COPY requirements.txt .
 RUN apk add --update --no-cache gcc build-base musl-dev libffi-dev && \
     pip3 install --user -r requirements.txt --no-cache-dir --break-system-packages --no-warn-script-location
 
-FROM python:3.11-alpine3.19
+FROM python:3.13-alpine3.19
 
 RUN adduser -D appuser && apk add --no-cache jq git
 
