@@ -1,7 +1,9 @@
-FROM debian:stable-slim as ffmpeg-build
+FROM debian:bookworm-slim AS ffmpeg-installer
 RUN apt-get update && \
     apt-get install -y --no-install-recommends ffmpeg && \
     rm -rf /var/lib/apt/lists/*
 
 FROM nextcloud:30.0.1-apache
-COPY --from=ffmpeg-build /usr/bin/ffmpeg /usr/bin/ffmpeg
+COPY --from=ffmpeg-installer /usr/bin/ffmpeg /usr/bin/ffmpeg
+COPY --from=ffmpeg-installer /usr/lib/*-linux-gnu/* /usr/lib/
+COPY --from=ffmpeg-installer /lib/*-linux-gnu/* /usr/lib/
