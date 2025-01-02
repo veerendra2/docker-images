@@ -1,16 +1,10 @@
 #!/bin/sh
 
-if [ ! -f /opt/secrets/SESSION_SECRET ]; then
-  echo "Generating session secret..."
-  openssl rand -hex 23 > /opt/secrets/SESSION_SECRET
-fi
+secrets="SESSION_SECRET JWT_SECRET STORAGE_ENCRYPTION_KEY"
 
-if [ ! -f /opt/secrets/JWT_SECRET ]; then
-  echo "Generating JWT secret..."
-  openssl rand -hex 23 > /opt/secrets/JWT_SECRET
-fi
-
-if [ ! -f /opt/secrets/STORAGE_ENCRYPTION_KEY ]; then
-  echo "Generating storage encryption key..."
-  openssl rand -hex 23 > /opt/secrets/STORAGE_ENCRYPTION_KEY
-fi
+for secret in $secrets; do
+  if [ ! -f "/secrets/$secret" ]; then
+    echo "Generating $secret..."
+    openssl rand -hex 23 > "/secrets/$secret"
+  fi
+done
