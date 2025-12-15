@@ -14,7 +14,6 @@ RUN useradd -ms /bin/bash terraform && \
     apt-get update && apt-get install -y --no-install-recommends \
     jq tmate && \
     rm -rf /var/lib/apt/lists/*
-
 COPY --from=build /usr/bin/terraform /usr/bin/terraform
 
 USER terraform

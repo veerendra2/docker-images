@@ -6,12 +6,9 @@ RUN apk add --update --no-cache gcc build-base musl-dev libffi-dev && \
 FROM python:3.13-alpine3.19
 
 RUN adduser -D appuser && apk add --no-cache jq git
-
 COPY --from=build /root/.local /home/appuser/.local
-
 RUN chown -R appuser:appuser /home/appuser/.local
-
 ENV PATH=/home/appuser/.local/bin:$PATH
-USER appuser
 
+USER appuser
 WORKDIR /home/appuser
