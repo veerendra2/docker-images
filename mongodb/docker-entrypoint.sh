@@ -4,10 +4,6 @@ set -Eeuo pipefail
 file_env() {
     local var="$1"
     local fileVar="${var}_FILE"
-    if [ "${!var:-}" ] && [ "${!fileVar:-}" ]; then
-        echo >&2 "error: both $var and $fileVar are set"
-        exit 1
-    fi
     if [ "${!fileVar:-}" ]; then
         export "$var"="$(< "${!fileVar}")"
     fi
@@ -22,32 +18,41 @@ if [ "$1" = 'mongod' ]; then
     file_env 'MONGO_INITDB_ROOT_USERNAME'
     file_env 'MONGO_INITDB_ROOT_PASSWORD'
 
-    if [ -n "${MONGO_INITDB_ROOT_USERNAME:-}" ] && [ ! -f "/data/db/storage.bson" ]; then
-        echo "Creating MongoDB root user..."
+    shouldPerformInitdb=
+    if [ -n "${MONGO_INITDB_ROOT_USERNAME:-}" ] && [ -n "${MONGO_INITDB_ROOT_PASSWORD:-}" ]; then
+        shouldPerformInitdb='true'
+
+        for path in "/data/db/WiredTiger" "/data/db/journal" "/data/db/local.0" "/data/db/storage.bson"; do
+            if [ -e "$path" ]; then
+                shouldPerformInitdb=
+                break
+            fi
+        done
+    fi
+
+    if [ -n "$shouldPerformInitdb" ]; then
+        echo "Initializing new database..."
 
         pidfile="/tmp/docker-temp-mongod.pid"
 
         mongod --fork --logpath /proc/self/fd/1 --bind_ip 127.0.0.1 --pidfilepath "$pidfile"
 
         tries=30
-        while true; do
-            if /usr/local/bin/mongo-init --ping > /dev/null 2>&1; then
-                break
-            fi
+        while ! /usr/local/bin/mongo-init --ping > /dev/null 2>&1; do
+            (( tries-- ))
             if [ "$tries" -le 0 ]; then
-                echo >&2 "error: mongod did not start in time"
+                echo >&2 "error: mongod failed to start"
                 exit 1
             fi
-            (( tries-- ))
             sleep 1
         done
 
         /usr/local/bin/mongo-init "$MONGO_INITDB_ROOT_USERNAME" "$MONGO_INITDB_ROOT_PASSWORD"
 
         mongod --shutdown --pidfilepath "$pidfile"
-        rm -f "$pidfile"
 
-        echo "MongoDB init process complete."
+        sleep 2
+        echo "Database initialized successfully."
     fi
 
     if [[ "$*" != *"--bind_ip"* ]]; then
