@@ -11,14 +11,16 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-func main() {
-	uri := "mongodb://127.0.0.1:27017"
+const (
+	Uri   string = "mongodb://127.0.0.1:27017"
+	Usage string = "usage: mongo-init <user> <pass>"
+)
 
-	// Wait logic for entrypoint
+func main() {
 	if len(os.Args) > 1 && os.Args[1] == "--ping" {
-		ctx, cancel := context.WithTimeout(context.Background(), 1*time.Second)
+		ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 		defer cancel()
-		client, err := mongo.Connect(ctx, options.Client().ApplyURI(uri))
+		client, err := mongo.Connect(ctx, options.Client().ApplyURI(Uri))
 		if err == nil && client.Ping(ctx, nil) == nil {
 			os.Exit(0)
 		}
@@ -26,14 +28,14 @@ func main() {
 	}
 
 	if len(os.Args) < 3 {
-		fmt.Println("usage: mongo-init <user> <pass>")
+		fmt.Println(Usage)
 		return
 	}
 
 	u, p := os.Args[1], os.Args[2]
 	ctx := context.TODO()
 
-	c, err := mongo.Connect(ctx, options.Client().ApplyURI(uri))
+	c, err := mongo.Connect(ctx, options.Client().ApplyURI(Uri))
 	if err != nil {
 		fmt.Println("connect err")
 		return
