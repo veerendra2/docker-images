@@ -53,3 +53,12 @@ updates:
       interval: "weekly"
       time: "09:00"
       timezone: "Europe/Berlin"
+
+  - package-ecosystem: "gomod"
+    directory: "/mongodb/mongo-init"
+    schedule:
+      interval: "weekly"
+    groups:
+      gomod:
+        patterns:
+          - "*"
