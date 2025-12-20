@@ -33,7 +33,8 @@ func main() {
 	}
 
 	u, p := os.Args[1], os.Args[2]
-	ctx := context.TODO()
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
 
 	c, err := mongo.Connect(ctx, options.Client().ApplyURI(Uri))
 	if err != nil {
