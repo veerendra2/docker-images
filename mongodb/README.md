@@ -7,7 +7,7 @@ A minimal MongoDB Docker image built for homelab/homeserver use. Not intended fo
 - Version: `8.2.0`
 - Image size: `~340MB`
 - Tags: `latest` only
-- Contains only `mongod` (no `mongosh`)
+- Contains only `mongod` (no `mongosh`, `mongos` or other MongoDB
 
 ## Usage
 
