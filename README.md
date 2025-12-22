@@ -16,3 +16,4 @@ Dockerfiles to build images with various tools mainly intend use in ci/cd pipeli
 | `veerendra2/secrets-generator` | ![Docker Image Version (tag)](https://img.shields.io/docker/v/veerendra2/secrets-generator) | ![Docker Image Size](https://img.shields.io/docker/image-size/veerendra2/secrets-generator) |
 | `veerendra2/terraform`         | ![Docker Image Version (tag)](https://img.shields.io/docker/v/veerendra2/ci-full)           | ![Docker Image Size](https://img.shields.io/docker/image-size/veerendra2/terraform)         |
 | `veerendra2/utils`             | ![Docker Image Version (tag)](https://img.shields.io/docker/v/veerendra2/utils)             | ![Docker Image Size](https://img.shields.io/docker/image-size/veerendra2/utils)             |
+| `veerendra2/komodo-periphery`  | ![Docker Image Version (tag)](https://img.shields.io/docker/v/veerendra2/komodo-periphery)  | ![Docker Image Size](https://img.shields.io/docker/image-size/veerendra2/komodo-periphery)  |
