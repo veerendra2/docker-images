@@ -17,7 +17,7 @@ This image extends the official `ghcr.io/mbecker20/periphery:latest` to run with
 ```bash
 # Create user with same UID/GID as container
 sudo groupadd -g 9999 periphery
-sudo useradd -u 9999 -g periphery -m -s /bin/bash periphery
+sudo useradd -u 9999 -g periphery -m -s /usr/sbin/nologin periphery
 
 # Add user to docker group for Docker socket access
 sudo usermod -aG docker periphery
