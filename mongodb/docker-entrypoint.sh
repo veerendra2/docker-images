@@ -1,6 +1,11 @@
 #!/usr/bin/env bash
 set -Eeuo pipefail
 
+if [ "${1:0:1}" = '-' ]; then
+	set -- mongod "$@"
+fi
+
+
 file_env() {
     local var="$1"
     local fileVar="${var}_FILE"
