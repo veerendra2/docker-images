@@ -6,7 +6,7 @@ A tiny Go binary (~8MB) to create the initial root user in MongoDB, replacing th
 
 - See [`Dockerfile`](../Dockerfile)
 
-```
+```bash
 go build -ldflags="-s -w" -trimpath -o mongo-init ./...
 ```
 
@@ -14,7 +14,7 @@ go build -ldflags="-s -w" -trimpath -o mongo-init ./...
 
 - See [`docker-entrypoint.sh`](../docker-entrypoint.sh)
 
-```
+```bash
 ./mongo-init -h
 Usage of ./mongo-init:
   -pass string
