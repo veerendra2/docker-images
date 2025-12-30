@@ -43,7 +43,7 @@ if [ "$1" = 'mongod' ]; then
         mongod --fork --logpath /proc/self/fd/1 --bind_ip 127.0.0.1 --pidfilepath "$pidfile"
 
         tries=30
-        while ! /usr/local/bin/mongo-init --ping > /dev/null 2>&1; do
+        while ! /usr/local/bin/mongo-init -ping > /dev/null 2>&1; do
             (( tries-- ))
             if [ "$tries" -le 0 ]; then
                 echo >&2 "error: mongod failed to start"
@@ -52,7 +52,7 @@ if [ "$1" = 'mongod' ]; then
             sleep 1
         done
 
-        /usr/local/bin/mongo-init "$MONGO_INITDB_ROOT_USERNAME" "$MONGO_INITDB_ROOT_PASSWORD"
+        /usr/local/bin/mongo-init -user "$MONGO_INITDB_ROOT_USERNAME" -pass "$MONGO_INITDB_ROOT_PASSWORD"
 
         mongod --shutdown --pidfilepath "$pidfile"
 

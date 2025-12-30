@@ -6,14 +6,14 @@ COPY mongo-init mongo-init
 RUN apk add --no-cache curl jq \
     && cd mongo-init \
     && go mod tidy \
-    && CGO_ENABLED=0 go build -ldflags="-s -w" -o /app/mongo-init . \
+    && CGO_ENABLED=0 go build -ldflags="-s -w" -trimpath -o /app/mongo-init . \
     # Build gosu from latest source
     && LATEST_GOSU=$(curl -s https://api.github.com/repos/tianon/gosu/releases/latest | jq -r .tag_name) \
     && curl -L -o gosu.tar.gz "https://github.com/tianon/gosu/archive/refs/tags/${LATEST_GOSU}.tar.gz" \
     && mkdir /gosu-src \
     && tar -xzf gosu.tar.gz -C /gosu-src --strip-components=1 \
     && cd /gosu-src \
-    && CGO_ENABLED=0 go build -ldflags="-s -w" -o /app/gosu . \
+    && CGO_ENABLED=0 go build -ldflags="-s -w" -trimpath -o /app/gosu . \
     && chmod +x /app/gosu /app/mongo-init
 
 FROM ubuntu:24.04
