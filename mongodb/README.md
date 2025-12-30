@@ -25,10 +25,10 @@ A minimal MongoDB Docker image built for homelab/homeserver use. Not intended fo
 ```yaml
 services:
   mongo:
-    image: mongodb1:latest
+    image: veerendra2/mongodb
     restart: always
     environment:
-      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_USERNAME: myroot
       MONGO_INITDB_ROOT_PASSWORD: example
 
   mongo-express:
@@ -37,6 +37,14 @@ services:
     ports:
       - 8081:8081
     environment:
-      ME_CONFIG_MONGODB_URL: mongodb://root:example@mongo:27017/
+      ME_CONFIG_MONGODB_URL: mongodb://myroot:example@mongo:27017/
       ME_CONFIG_BASICAUTH_ENABLED: true
 ```
+
+```bash
+docker compose -f compose.yml up
+```
+
+- Go to http://localhost:8081
+  - Username: `myroot`
+  - Passoword: `example`
