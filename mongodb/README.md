@@ -13,6 +13,8 @@ A minimal MongoDB Docker image built for homelab/homeserver use. Not intended fo
 
 ### Environment Variables
 
+> If env vars are unset, [mongo-init](./mongo-init/main.go) creates default credentials: `admin` / `changeme!`.
+
 - `MONGO_INITDB_ROOT_USERNAME` - Initial root user
 - `MONGO_INITDB_ROOT_PASSWORD` - Initial root password
 - `MONGO_INITDB_ROOT_USERNAME_FILE` - File containing username
@@ -23,7 +25,7 @@ A minimal MongoDB Docker image built for homelab/homeserver use. Not intended fo
 ```yaml
 services:
   mongo:
-    image: veerendra2/mongodb
+    image: mongodb1:latest
     restart: always
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
