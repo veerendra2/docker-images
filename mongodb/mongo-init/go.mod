@@ -2,7 +2,7 @@ module mongo-init
 
 go 1.25.5
 
-require go.mongodb.org/mongo-driver v1.17.7
+require go.mongodb.org/mongo-driver v1.17.8
 
 require (
 	github.com/golang/snappy v0.0.4 // indirect
