@@ -27,6 +27,7 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
     --mount=type=cache,target=/var/lib/apt,sharing=locked \
     apt-get update && apt-get install -y \
         pkg-config \
+        libasound2-dev \
     && rm -rf /var/lib/apt/lists/*
 
 COPY --from=source /zeroclaw/Cargo.toml /zeroclaw/Cargo.lock ./
