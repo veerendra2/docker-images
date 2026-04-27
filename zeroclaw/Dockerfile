@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:1.7
 
 ARG ZEROCLAW_VERSION=master
-ARG ZEROCLAW_CARGO_FEATURES="agent-runtime,gateway,whatsapp-web,channel-nostr,channel-matrix,voice-wake,rag-pdf,channel-feishu,observability-prometheus,schema-export,tui-onboarding"
+ARG ZEROCLAW_CARGO_FEATURES="agent-runtime,gateway,whatsapp-web,channel-nostr,voice-wake,rag-pdf,channel-feishu,observability-prometheus,schema-export,tui-onboarding"
 
 # -- Stage 0: Clone upstream repo ----------------------------------------
 FROM alpine/git:latest AS source

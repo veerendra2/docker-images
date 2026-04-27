@@ -18,7 +18,6 @@ Built with the following Cargo feature flags:
 | `gateway` | Web dashboard UI and REST/WebSocket API |
 | `whatsapp-web` | WhatsApp via browser protocol (QR code pairing) |
 | `channel-nostr` | Nostr decentralized messaging |
-| `channel-matrix` | Matrix protocol support |
 | `voice-wake` | Voice wake word detection |
 | `rag-pdf` | PDF document RAG tool |
 | `channel-feishu` | Feishu/Lark messaging |
@@ -39,7 +38,6 @@ All channels included via `agent-runtime` + extras:
 | WhatsApp Cloud API | `channel-whatsapp-cloud` |
 | WhatsApp Web (QR) | `whatsapp-web` |
 | Signal | `channel-signal` |
-| Matrix | `channel-matrix` |
 | Nostr | `channel-nostr` |
 | IRC | `channel-irc` |
 | iMessage | `channel-imessage` |
