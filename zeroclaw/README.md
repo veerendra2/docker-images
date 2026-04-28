@@ -100,5 +100,5 @@ volumes:
 
 | Arg | Default | Description |
 | --- | --- | --- |
-| `ZEROCLAW_VERSION` | `master` | Git branch or tag to build from |
+| `ZEROCLAW_VERSION` | `v0.7.3` | Git tag to build from |
 | `ZEROCLAW_CARGO_FEATURES` | *(see Dockerfile)* | Comma-separated Cargo features |
