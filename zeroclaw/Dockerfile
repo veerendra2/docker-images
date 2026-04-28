@@ -32,8 +32,6 @@ COPY --from=source /zeroclaw/src/ src/
 COPY --from=source /zeroclaw/benches/ benches/
 COPY --from=source /zeroclaw/crates/ crates/
 COPY --from=source /zeroclaw/apps/ apps/
-COPY --from=source /zeroclaw/tools/ tools/
-COPY --from=source /zeroclaw/xtask/ xtask/
 COPY --from=web /web/dist web/dist
 
 RUN --mount=type=cache,id=zeroclaw-cargo-registry,target=/usr/local/cargo/registry,sharing=locked \
