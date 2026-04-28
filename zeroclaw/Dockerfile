@@ -58,6 +58,9 @@ RUN --mount=type=cache,id=zeroclaw-cargo-registry,target=/usr/local/cargo/regist
 RUN rm -rf src benches
 COPY --from=source /zeroclaw/src/ src/
 COPY --from=source /zeroclaw/benches/ benches/
+COPY --from=source /zeroclaw/crates/ crates/
+COPY --from=source /zeroclaw/tools/ tools/
+COPY --from=source /zeroclaw/xtask/ xtask/
 COPY --from=web-builder /web/dist web/dist
 RUN touch src/main.rs src/lib.rs
 
