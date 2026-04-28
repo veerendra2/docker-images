@@ -25,7 +25,7 @@ jobs:
 
   docker-build:
     name: Test Docker Build
-    runs-on: ubuntu-latest
+    runs-on: namespace-profile-docker-images
     needs: setup-matrix
     if: needs.setup-matrix.outputs.matrix != '[]'
     strategy:

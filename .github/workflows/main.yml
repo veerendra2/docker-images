@@ -38,7 +38,7 @@ jobs:
 
   docker-build:
     name: Docker Build
-    runs-on: ubuntu-latest
+    runs-on: namespace-profile-docker-images
     needs: setup-matrix
     if: needs.setup-matrix.outputs.matrix != '[]'
     strategy:
@@ -73,8 +73,6 @@ jobs:
           push: true
           tags: |
             ${{ secrets.DOCKERHUB_USERNAME }}/${{ matrix.docker-dir }}:latest
-          cache-from: type=gha,scope=${{ matrix.docker-dir }}
-          cache-to: type=gha,mode=max,scope=${{ matrix.docker-dir }}
 
   custom-builds:
     name: Custom Docker Build
