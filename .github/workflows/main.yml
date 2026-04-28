@@ -73,6 +73,8 @@ jobs:
           push: true
           tags: |
             ${{ secrets.DOCKERHUB_USERNAME }}/${{ matrix.docker-dir }}:latest
+          cache-from: type=gha,scope=${{ matrix.docker-dir }}
+          cache-to: type=gha,mode=max,scope=${{ matrix.docker-dir }}
 
   custom-builds:
     name: Custom Docker Build
