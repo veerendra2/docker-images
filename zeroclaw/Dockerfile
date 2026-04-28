@@ -31,38 +31,13 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
     && rm -rf /var/lib/apt/lists/*
 
 COPY --from=source /zeroclaw/Cargo.toml /zeroclaw/Cargo.lock ./
-COPY --from=source /zeroclaw/crates/ crates/
-COPY --from=source /zeroclaw/apps/tauri/Cargo.toml apps/tauri/Cargo.toml
-COPY --from=source /zeroclaw/tools/ tools/
-COPY --from=source /zeroclaw/xtask/ xtask/
-COPY --from=source /zeroclaw/crates/aardvark-sys/build.rs crates/aardvark-sys/build.rs
-
-RUN mkdir -p src benches apps/tauri/src \
-    && echo "fn main() {}" > src/main.rs \
-    && echo "" > src/lib.rs \
-    && echo "fn main() {}" > benches/agent_benchmarks.rs \
-    && echo "fn main() {}" > apps/tauri/src/main.rs \
-    && for d in crates/*/; do mkdir -p "${d}src" && printf '' > "${d}src/lib.rs"; done \
-    && for d in tools/*/; do mkdir -p "${d}src" && echo "fn main() {}" > "${d}src/main.rs"; done \
-    && mkdir -p xtask/src && echo "fn main() {}" > xtask/src/main.rs
-
-RUN --mount=type=cache,id=zeroclaw-cargo-registry,target=/usr/local/cargo/registry,sharing=locked \
-    --mount=type=cache,id=zeroclaw-cargo-git,target=/usr/local/cargo/git,sharing=locked \
-    --mount=type=cache,id=zeroclaw-target,target=/app/target,sharing=locked \
-    if [ -n "$ZEROCLAW_CARGO_FEATURES" ]; then \
-      cargo build --release --locked --features "$ZEROCLAW_CARGO_FEATURES"; \
-    else \
-      cargo build --release --locked; \
-    fi
-
-RUN rm -rf src benches
 COPY --from=source /zeroclaw/src/ src/
 COPY --from=source /zeroclaw/benches/ benches/
 COPY --from=source /zeroclaw/crates/ crates/
+COPY --from=source /zeroclaw/apps/ apps/
 COPY --from=source /zeroclaw/tools/ tools/
 COPY --from=source /zeroclaw/xtask/ xtask/
 COPY --from=web-builder /web/dist web/dist
-RUN touch src/main.rs src/lib.rs
 
 RUN --mount=type=cache,id=zeroclaw-cargo-registry,target=/usr/local/cargo/registry,sharing=locked \
     --mount=type=cache,id=zeroclaw-cargo-git,target=/usr/local/cargo/git,sharing=locked \
