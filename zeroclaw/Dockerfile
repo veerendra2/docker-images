@@ -41,9 +41,10 @@ RUN --mount=type=cache,id=zeroclaw-cargo-registry,target=/usr/local/cargo/regist
     && cp target/release/zeroclaw /app/zeroclaw \
     && strip /app/zeroclaw
 
-RUN mkdir -p /zeroclaw-data/.zeroclaw /zeroclaw-data/workspace /zeroclaw-data/web \
-    && cp -r web/dist /zeroclaw-data/web/dist \
-    && chown -R 65534:65534 /zeroclaw-data
+RUN mkdir -p /zeroclaw-data/.zeroclaw /zeroclaw-data/workspace \
+    && mkdir -p /usr/share/zeroclaw/web \
+    && cp -r web/dist /usr/share/zeroclaw/web/dist \
+    && chown -R 65534:65534 /zeroclaw-data /usr/share/zeroclaw
 
 # -- Stage 3: Runtime -----------------------------------------------------
 FROM debian:bookworm-slim
@@ -54,9 +55,11 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 COPY --from=builder /app/zeroclaw /usr/local/bin/zeroclaw
 COPY --from=builder /zeroclaw-data /zeroclaw-data
+COPY --from=builder /usr/share/zeroclaw /usr/share/zeroclaw
 
 ENV LANG=C.UTF-8
 ENV ZEROCLAW_WORKSPACE=/zeroclaw-data/workspace
+ENV ZEROCLAW_WEB_DIST_DIR=/usr/share/zeroclaw/web/dist
 ENV HOME=/zeroclaw-data
 ENV ZEROCLAW_GATEWAY_PORT=42617
 

@@ -6,32 +6,30 @@ on:
       - "**/**"
 
 jobs:
-  setup-matrix:
-    name: Setup Matrix
-    runs-on: ubuntu-slim
+  detect-directory-changes:
+    name: "Detect Changes"
+    runs-on: ubuntu-latest
     outputs:
-      matrix: ${{ steps.setup-matrix.outputs.matrix }}
+      changed: ${{ steps.detect.outputs.changed }}
     steps:
       - name: Checkout
         uses: actions/checkout@v6
+
+      - name: Detect Directory Changes
+        id: detect
+        uses: tchupp/actions-detect-directory-changes@v1
         with:
-          fetch-depth: 0
-      - name: Setup Matrix
-        id: setup-matrix
-        run: |
-          MATRIX=$(git diff --find-renames=100% --name-only $(git merge-base remotes/origin/main $(git rev-parse --abbrev-ref HEAD)) | grep '^[a-zA-Z0-9\-]*\/' | sed 's#/.*##g' | sort -u | jq -R -s -c 'split("\n")[:-1]')
-          echo "matrix=${MATRIX}" >> $GITHUB_OUTPUT
-          jq <<< "${MATRIX}"
+          included-extensions: "!*.yml"
 
   docker-build:
     name: Test Docker Build
     runs-on: namespace-profile-docker-images
-    needs: setup-matrix
-    if: needs.setup-matrix.outputs.matrix != '[]'
+    needs: detect-directory-changes
+    if: needs.detect-directory-changes.outputs.changed != '[]'
     strategy:
       fail-fast: false
       matrix:
-        docker-dir: ${{ fromJSON(needs.setup-matrix.outputs.matrix) }}
+        docker-dir: ${{ fromJSON(needs.detect-directory-changes.outputs.changed) }}
     steps:
       - name: Checkout Code
         uses: actions/checkout@v6
@@ -43,7 +41,6 @@ jobs:
         uses: docker/setup-buildx-action@v4
 
       - name: Build
-        id: docker_build
         uses: docker/build-push-action@v7
         with:
           context: ${{ matrix.docker-dir }}
