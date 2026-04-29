@@ -33,7 +33,7 @@ jobs:
   docker-build:
     name: Docker Build
     runs-on: namespace-profile-docker-images
-    needs: setup-matrix
+    needs: detect-directory-changes
     if: needs.detect-directory-changes.outputs.changed != '[]'
     strategy:
       fail-fast: false
