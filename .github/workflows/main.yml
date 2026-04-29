@@ -28,7 +28,7 @@ jobs:
         id: detect
         uses: tchupp/actions-detect-directory-changes@v1
         with:
-          included-extensions: "!*.yml"
+          included-extensions: "!*.yml,Dockerfile"
 
   docker-build:
     name: Docker Build
