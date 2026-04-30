@@ -43,19 +43,26 @@ RUN --mount=type=cache,id=zeroclaw-cargo-registry,target=/usr/local/cargo/regist
 
 RUN mkdir -p /zeroclaw-data/.zeroclaw /zeroclaw-data/workspace \
     && mkdir -p /usr/share/zeroclaw/web \
-    && cp -r web/dist /usr/share/zeroclaw/web/dist \
-    && chown -R 65534:65534 /zeroclaw-data /usr/share/zeroclaw
+    && cp -r web/dist /usr/share/zeroclaw/web/dist
 
 # -- Stage 3: Runtime -----------------------------------------------------
 FROM debian:bookworm-slim
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
-        bash ca-certificates cron curl git libasound2 \
-    && rm -rf /var/lib/apt/lists/*
+        bash ca-certificates curl git libasound2 \
+        python3 \
+        zip unzip openssh-client rsync vim \
+        jq wget tree less procps net-tools iputils-ping file \
+    && rm -rf /var/lib/apt/lists/* \
+    && useradd -m -d /zeroclaw-data -s /bin/bash zeroclaw
 
 COPY --from=builder /app/zeroclaw /usr/local/bin/zeroclaw
 COPY --from=builder /zeroclaw-data /zeroclaw-data
 COPY --from=builder /usr/share/zeroclaw /usr/share/zeroclaw
+
+RUN chown -R zeroclaw:zeroclaw /zeroclaw-data /usr/share/zeroclaw \
+    && (find /bin /sbin /usr/bin /usr/sbin /usr/local/bin /usr/local/sbin \
+        -perm /6000 -type f -exec chmod a-s {} \; 2>/dev/null || true)
 
 ENV LANG=C.UTF-8
 ENV ZEROCLAW_WORKSPACE=/zeroclaw-data/workspace
@@ -64,7 +71,7 @@ ENV HOME=/zeroclaw-data
 ENV ZEROCLAW_GATEWAY_PORT=42617
 
 WORKDIR /zeroclaw-data
-USER 65534:65534
+USER zeroclaw
 EXPOSE 42617
 
 HEALTHCHECK --interval=60s --timeout=10s --retries=3 --start-period=10s \

@@ -63,7 +63,19 @@ Available in the container for agent shell operations:
 - `bash`
 - `curl`
 - `git`
-- `cron`
+- `python3`
+- `jq`
+- `vim`
+- `wget`
+- `zip` / `unzip`
+- `openssh-client`
+- `rsync`
+- `tree`
+- `less`
+- `procps` (`ps`, `top`, `free`)
+- `net-tools` (`ifconfig`, `netstat`)
+- `iputils-ping`
+- `file`
 
 ## Environment Variables
 
