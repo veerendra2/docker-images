@@ -61,7 +61,7 @@ COPY --from=builder /zeroclaw-data /zeroclaw-data
 COPY --from=builder /usr/share/zeroclaw /usr/share/zeroclaw
 
 RUN chown -R zeroclaw:zeroclaw /zeroclaw-data /usr/share/zeroclaw \
-    && find / -perm /6000 -type f -exec chmod a-s {} \; 2>/dev/null || true
+    && (find / -perm /6000 -type f -exec chmod a-s {} \; 2>/dev/null || true)
 
 ENV LANG=C.UTF-8
 ENV ZEROCLAW_WORKSPACE=/zeroclaw-data/workspace
