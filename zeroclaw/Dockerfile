@@ -69,9 +69,6 @@ ENV ZEROCLAW_WEB_DIST_DIR=/usr/share/zeroclaw/web/dist
 ENV HOME=/zeroclaw-data
 ENV ZEROCLAW_GATEWAY_PORT=42617
 
-LABEL org.opencontainers.image.title="zeroclaw" \
-      security.drop-capabilities="ALL"
-
 WORKDIR /zeroclaw-data
 USER zeroclaw
 EXPOSE 42617
