@@ -50,7 +50,7 @@ FROM debian:bookworm-slim
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
         bash ca-certificates curl git libasound2 \
-        python3 python3-venv \
+        python3 \
         zip unzip openssh-client rsync vim \
         jq wget tree less procps net-tools iputils-ping file \
     && rm -rf /var/lib/apt/lists/* \
