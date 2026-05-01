@@ -15,30 +15,36 @@ on:
         default: "yes"
 
 jobs:
-  detect-directory-changes:
-    name: "Detect Changes"
-    runs-on: ubuntu-latest
+  setup-matrix:
+    name: Setup Matrix
+    runs-on: ubuntu-slim
     outputs:
-      changed: ${{ steps.detect.outputs.changed }}
+      matrix: ${{ steps.setup-matrix.outputs.matrix }}
     steps:
       - name: Checkout
         uses: actions/checkout@v6
-
-      - name: Detect Directory Changes
-        id: detect
-        uses: tchupp/actions-detect-directory-changes@v1
         with:
-          included-extensions: "!*.yml,Dockerfile"
+          fetch-depth: 0
+      - name: Setup Matrix
+        id: setup-matrix
+        run: |
+          if [[ "${{ github.event_name }}" == "schedule" || "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            MATRIX=$(ls -d */ | sed 's#/##' | jq -R -s -c 'split("\n")[:-1]')
+          else
+             MATRIX=$(git diff --find-renames=100% --name-only HEAD^ HEAD | grep '^[a-zA-Z0-9\-]*\/' | sed 's#/.*##g' | sort -u | jq -R -s -c 'split("\n")[:-1]')
+          fi
+          echo "matrix=${MATRIX}" >> $GITHUB_OUTPUT
+          jq <<< "${MATRIX}"
 
   docker-build:
     name: Docker Build
     runs-on: namespace-profile-docker-images
-    needs: detect-directory-changes
-    if: needs.detect-directory-changes.outputs.changed != '[]'
+    needs: setup-matrix
+    if: needs.setup-matrix.outputs.matrix != '[]'
     strategy:
       fail-fast: false
       matrix:
-        docker-dir: ${{ fromJSON(needs.detect-directory-changes.outputs.changed) }}
+        docker-dir: ${{ fromJSON(needs.setup-matrix.outputs.matrix) }}
     steps:
       - name: Checkout Code
         uses: actions/checkout@v6
