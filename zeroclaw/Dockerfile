@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1.7
 
-ARG ZEROCLAW_VERSION=v0.7.3
+ARG ZEROCLAW_VERSION=v0.7.4
 ARG ZEROCLAW_CARGO_FEATURES="agent-runtime,gateway,whatsapp-web,channel-nostr,voice-wake,rag-pdf,channel-feishu,observability-prometheus,schema-export,tui-onboarding"
 
 # -- Stage 0: Clone source ------------------------------------------------
@@ -32,6 +32,8 @@ COPY --from=source /zeroclaw/src/ src/
 COPY --from=source /zeroclaw/benches/ benches/
 COPY --from=source /zeroclaw/crates/ crates/
 COPY --from=source /zeroclaw/apps/ apps/
+COPY --from=source /zeroclaw/tools/ tools/
+COPY --from=source /zeroclaw/xtask/ xtask/
 COPY --from=web /web/dist web/dist
 
 RUN --mount=type=cache,id=zeroclaw-cargo-registry,target=/usr/local/cargo/registry,sharing=locked \
