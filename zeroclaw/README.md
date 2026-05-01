@@ -56,6 +56,10 @@ All channels included via `agent-runtime` + extras:
 | Webhook            | `channel-webhook`        |
 | Voice Call         | `channel-voice-call`     |
 
+## User
+
+The container runs as a non-root user `zeroclaw` (created via `useradd`) with home directory `/zeroclaw-data`.
+
 ## CLI Tools
 
 Available in the container for agent shell operations:
