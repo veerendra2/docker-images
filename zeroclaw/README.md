@@ -12,49 +12,49 @@ A custom ZeroClaw Docker image built with full features enabled, including all m
 
 Built with the following Cargo feature flags:
 
-| Feature | Description |
-| --- | --- |
-| `agent-runtime` | Full agent loop, tools, and all standard channels |
-| `gateway` | Web dashboard UI and REST/WebSocket API |
-| `whatsapp-web` | WhatsApp via browser protocol (QR code pairing) |
-| `channel-nostr` | Nostr decentralized messaging |
-| `voice-wake` | Voice wake word detection |
-| `rag-pdf` | PDF document RAG tool |
-| `channel-feishu` | Feishu/Lark messaging |
-| `observability-prometheus` | Prometheus metrics endpoint |
-| `schema-export` | Config schema export |
-| `tui-onboarding` | Terminal UI onboarding |
+| Feature                    | Description                                       |
+| -------------------------- | ------------------------------------------------- |
+| `agent-runtime`            | Full agent loop, tools, and all standard channels |
+| `gateway`                  | Web dashboard UI and REST/WebSocket API           |
+| `whatsapp-web`             | WhatsApp via browser protocol (QR code pairing)   |
+| `channel-nostr`            | Nostr decentralized messaging                     |
+| `voice-wake`               | Voice wake word detection                         |
+| `rag-pdf`                  | PDF document RAG tool                             |
+| `channel-feishu`           | Feishu/Lark messaging                             |
+| `observability-prometheus` | Prometheus metrics endpoint                       |
+| `schema-export`            | Config schema export                              |
+| `tui-onboarding`           | Terminal UI onboarding                            |
 
 ## Channels
 
 All channels included via `agent-runtime` + extras:
 
-| Channel | Feature Flag |
-| --- | --- |
-| Email | `channel-email` |
-| Telegram | `channel-telegram` |
-| Slack | `channel-slack` |
-| Discord | `channel-discord` |
+| Channel            | Feature Flag             |
+| ------------------ | ------------------------ |
+| Email              | `channel-email`          |
+| Telegram           | `channel-telegram`       |
+| Slack              | `channel-slack`          |
+| Discord            | `channel-discord`        |
 | WhatsApp Cloud API | `channel-whatsapp-cloud` |
-| WhatsApp Web (QR) | `whatsapp-web` |
-| Signal | `channel-signal` |
-| Nostr | `channel-nostr` |
-| IRC | `channel-irc` |
-| iMessage | `channel-imessage` |
-| Bluesky | `channel-bluesky` |
-| Twitter/X | `channel-twitter` |
-| Reddit | `channel-reddit` |
-| Notion | `channel-notion` |
-| Mattermost | `channel-mattermost` |
-| DingTalk | `channel-dingtalk` |
-| QQ | `channel-qq` |
-| WeCom | `channel-wecom` |
-| Lark/Feishu | `channel-feishu` |
-| LINE (LINQ) | `channel-linq` |
-| WATI | `channel-wati` |
-| Nextcloud | `channel-nextcloud` |
-| Webhook | `channel-webhook` |
-| Voice Call | `channel-voice-call` |
+| WhatsApp Web (QR)  | `whatsapp-web`           |
+| Signal             | `channel-signal`         |
+| Nostr              | `channel-nostr`          |
+| IRC                | `channel-irc`            |
+| iMessage           | `channel-imessage`       |
+| Bluesky            | `channel-bluesky`        |
+| Twitter/X          | `channel-twitter`        |
+| Reddit             | `channel-reddit`         |
+| Notion             | `channel-notion`         |
+| Mattermost         | `channel-mattermost`     |
+| DingTalk           | `channel-dingtalk`       |
+| QQ                 | `channel-qq`             |
+| WeCom              | `channel-wecom`          |
+| Lark/Feishu        | `channel-feishu`         |
+| LINE (LINQ)        | `channel-linq`           |
+| WATI               | `channel-wati`           |
+| Nextcloud          | `channel-nextcloud`      |
+| Webhook            | `channel-webhook`        |
+| Voice Call         | `channel-voice-call`     |
 
 ## CLI Tools
 
@@ -110,7 +110,7 @@ volumes:
 
 ### Build Args
 
-| Arg | Default | Description |
-| --- | --- | --- |
-| `ZEROCLAW_VERSION` | `v0.7.3` | Git tag to build from |
-| `ZEROCLAW_CARGO_FEATURES` | *(see Dockerfile)* | Comma-separated Cargo features |
+| Arg                       | Default            | Description                    |
+| ------------------------- | ------------------ | ------------------------------ |
+| `ZEROCLAW_VERSION`        | `v0.7.4`           | Git tag to build from          |
+| `ZEROCLAW_CARGO_FEATURES` | _(see Dockerfile)_ | Comma-separated Cargo features |
