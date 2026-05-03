@@ -58,9 +58,14 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && rm -rf /var/lib/apt/lists/* \
     && useradd -m -d /zeroclaw-data -s /bin/bash zeroclaw
 
+ARG GOSU_VERSION=1.19
+RUN curl -fsSL "https://github.com/tianon/gosu/releases/download/${GOSU_VERSION}/gosu-$(dpkg --print-architecture)" \
+      -o /usr/local/bin/gosu && chmod +x /usr/local/bin/gosu && gosu --version
+
 COPY --from=builder /app/zeroclaw /usr/local/bin/zeroclaw
 COPY --from=builder /zeroclaw-data /zeroclaw-data
 COPY --from=builder /usr/share/zeroclaw /usr/share/zeroclaw
+COPY entrypoint.sh /usr/local/bin/entrypoint.sh
 
 RUN chown -R zeroclaw:zeroclaw /zeroclaw-data /usr/share/zeroclaw \
     && (find /bin /sbin /usr/bin /usr/sbin /usr/local/bin /usr/local/sbin \
@@ -73,11 +78,10 @@ ENV HOME=/zeroclaw-data
 ENV ZEROCLAW_GATEWAY_PORT=42617
 
 WORKDIR /zeroclaw-data
-USER zeroclaw
 EXPOSE 42617
 
 HEALTHCHECK --interval=60s --timeout=10s --retries=3 --start-period=10s \
     CMD ["zeroclaw", "status", "--format=exit-code"]
 
-ENTRYPOINT ["zeroclaw"]
+ENTRYPOINT ["entrypoint.sh"]
 CMD ["daemon"]
