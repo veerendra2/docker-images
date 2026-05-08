@@ -25,15 +25,16 @@ A custom ZeroClaw Docker image built with full features enabled, including all m
 | `observability-prometheus` | ✅      | Prometheus metrics endpoint                       |
 | `schema-export`            | ✅      | Config schema export                              |
 | `tui-onboarding`           | ✅      | Terminal UI onboarding                            |
+| `personality-editor`       | ✅      | Multi-surface (CLI/TUI/Web) personality editor    |
 
 </details>
 
-## Channels
+## Channels & Tools
 
 <details>
-<summary>All channels included via agent-runtime + extras (click to expand)</summary>
+<summary>All channels and tools included via agent-runtime + extras (click to expand)</summary>
 
-| Channel            | Feature Flag             | Enabled |
+| Channel/Tool       | Feature Flag             | Enabled |
 | ------------------ | ------------------------ | ------- |
 | Email              | `channel-email`          | ✅      |
 | Telegram           | `channel-telegram`       | ✅      |
@@ -48,6 +49,8 @@ A custom ZeroClaw Docker image built with full features enabled, including all m
 | Bluesky            | `channel-bluesky`        | ✅      |
 | Twitter/X          | `channel-twitter`        | ✅      |
 | Reddit             | `channel-reddit`         | ✅      |
+| Tavily Search      | `tool-tavily`            | ✅      |
+| PDF RAG            | `rag-pdf`                | ✅      |
 | Notion             | `channel-notion`         | ✅      |
 | Mattermost         | `channel-mattermost`     | ✅      |
 | DingTalk           | `channel-dingtalk`       | ✅      |
@@ -134,6 +137,6 @@ services:
 
 | Arg                       | Default            | Description                    |
 | ------------------------- | ------------------ | ------------------------------ |
-| `ZEROCLAW_VERSION`        | `v0.7.4`           | Git tag to build from          |
+| `ZEROCLAW_VERSION`        | `v0.7.5`           | Git tag to build from          |
 | `ZEROCLAW_CARGO_FEATURES` | _(see Dockerfile)_ | Comma-separated Cargo features |
 | `GOSU_VERSION`            | `1.19`             | gosu version for entrypoint    |
