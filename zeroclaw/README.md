@@ -76,6 +76,7 @@ A custom ZeroClaw Docker image built with full features enabled, including all m
 | `curl`           | ✅      | HTTP client             |
 | `git`            | ✅      | Version control         |
 | `python3`        | ✅      | Python 3.11 interpreter |
+| `gws`            | ✅      | Google Workspace CLI    |
 | `jq`             | ✅      | JSON processor          |
 | `vim`            | ✅      | Text editor             |
 | `wget`           | ✅      | File downloader         |
