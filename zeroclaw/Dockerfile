@@ -19,6 +19,8 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
     apt-get update && apt-get install -y --no-install-recommends npm \
     && rm -rf /var/lib/apt/lists/*
 
+RUN npm install -g @googleworkspace/cli
+
 RUN --mount=type=cache,id=zeroclaw-cargo-registry,target=/usr/local/cargo/registry,sharing=locked \
     --mount=type=cache,id=zeroclaw-cargo-git,target=/usr/local/cargo/git,sharing=locked \
     --mount=type=cache,id=zeroclaw-target,target=/app/target,sharing=locked \
@@ -79,6 +81,7 @@ RUN curl -fsSL "https://github.com/tianon/gosu/releases/download/${GOSU_VERSION}
       -o /usr/local/bin/gosu && chmod +x /usr/local/bin/gosu && gosu --version
 
 COPY --from=builder /app/zeroclaw /usr/local/bin/zeroclaw
+COPY --from=api-generator /usr/local/bin/gws /usr/local/bin/gws
 COPY --from=builder /zeroclaw-data /zeroclaw-data
 COPY --from=builder /usr/share/zeroclaw /usr/share/zeroclaw
 COPY entrypoint.sh /usr/local/bin/entrypoint.sh
