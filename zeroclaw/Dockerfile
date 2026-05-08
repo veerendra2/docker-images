@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1.7
 
-ARG ZEROCLAW_VERSION=v0.7.4
+ARG ZEROCLAW_VERSION=v0.7.5
 ARG ZEROCLAW_CARGO_FEATURES="agent-runtime,gateway,whatsapp-web,channel-nostr,voice-wake,rag-pdf,channel-feishu,observability-prometheus,schema-export,tui-onboarding"
 
 # -- Stage 0: Clone source ------------------------------------------------
@@ -9,15 +9,31 @@ ARG ZEROCLAW_VERSION
 RUN git clone --depth 1 --branch ${ZEROCLAW_VERSION} \
     https://github.com/zeroclaw-labs/zeroclaw.git /zeroclaw
 
-# -- Stage 1: Web frontend ------------------------------------------------
+# -- Stage 1: API generation ----------------------------------------------
+FROM rust:1.94-bookworm AS api-generator
+WORKDIR /app
+COPY --from=source /zeroclaw/ /app/
+
+RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
+    --mount=type=cache,target=/var/lib/apt,sharing=locked \
+    apt-get update && apt-get install -y --no-install-recommends npm \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN --mount=type=cache,id=zeroclaw-cargo-registry,target=/usr/local/cargo/registry,sharing=locked \
+    --mount=type=cache,id=zeroclaw-cargo-git,target=/usr/local/cargo/git,sharing=locked \
+    --mount=type=cache,id=zeroclaw-target,target=/app/target,sharing=locked \
+    cargo run -p xtask --bin web -- gen-api
+
+# -- Stage 2: Web frontend ------------------------------------------------
 FROM node:22-alpine AS web
 WORKDIR /web
 COPY --from=source /zeroclaw/web/package.json /zeroclaw/web/package-lock.json* ./
 RUN npm ci --ignore-scripts 2>/dev/null || npm install --ignore-scripts
 COPY --from=source /zeroclaw/web/ .
+COPY --from=api-generator /app/web/src/lib/api-generated.ts ./src/lib/api-generated.ts
 RUN npm run build
 
-# -- Stage 2: Rust build --------------------------------------------------
+# -- Stage 3: Rust build --------------------------------------------------
 FROM rust:1.94-bookworm AS builder
 WORKDIR /app
 ARG ZEROCLAW_CARGO_FEATURES
