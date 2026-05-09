@@ -1,4 +1,4 @@
-FROM ubuntu:24.04 AS build
+FROM ubuntu:26.04 AS build
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
     curl gnupg software-properties-common jq && \
@@ -8,7 +8,7 @@ RUN apt-get update && \
     apt-get install -y terraform && \
     rm -rf /var/lib/apt/lists/*
 
-FROM ubuntu:24.04
+FROM ubuntu:26.04
 
 RUN useradd -ms /bin/bash terraform && \
     apt-get update && apt-get install -y --no-install-recommends \
