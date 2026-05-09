@@ -1,4 +1,4 @@
-FROM ubuntu:24.04 AS build
+FROM ubuntu:26.04 AS build
 COPY requirements.txt .
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
@@ -12,7 +12,7 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/* apt-key.gpg && \
     pip3 install --user -r requirements.txt --no-cache-dir --no-warn-script-location --break-system-packages
 
-FROM ubuntu:24.04
+FROM ubuntu:26.04
 
 RUN useradd -ms /bin/bash util && \
     apt-get update && \
