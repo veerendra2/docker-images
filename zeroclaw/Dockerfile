@@ -19,8 +19,6 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
     apt-get update && apt-get install -y --no-install-recommends npm \
     && rm -rf /var/lib/apt/lists/*
 
-RUN npm install -g @googleworkspace/cli
-
 RUN --mount=type=cache,id=zeroclaw-cargo-registry,target=/usr/local/cargo/registry,sharing=locked \
     --mount=type=cache,id=zeroclaw-cargo-git,target=/usr/local/cargo/git,sharing=locked \
     --mount=type=cache,id=zeroclaw-target,target=/app/target,sharing=locked \
@@ -81,8 +79,20 @@ ARG GOSU_VERSION=1.19
 RUN curl -fsSL "https://github.com/tianon/gosu/releases/download/${GOSU_VERSION}/gosu-$(dpkg --print-architecture)" \
       -o /usr/local/bin/gosu && chmod +x /usr/local/bin/gosu && gosu --version
 
+RUN ARCH=$(dpkg --print-architecture); \
+    case "$ARCH" in \
+        amd64) GWS_ARCH="x86_64" ;; \
+        arm64) GWS_ARCH="aarch64" ;; \
+        *) echo "Unsupported architecture: $ARCH"; exit 1 ;; \
+    esac; \
+    GWS_VERSION=$(curl -s https://api.github.com/repos/googleworkspace/cli/releases/latest | jq -r .tag_name); \
+    curl -fsSL "https://github.com/googleworkspace/cli/releases/download/${GWS_VERSION}/google-workspace-cli-${GWS_ARCH}-unknown-linux-musl.tar.gz" \
+      -o /tmp/gws.tar.gz \
+    && tar -xzf /tmp/gws.tar.gz -C /usr/local/bin \
+    && rm /tmp/gws.tar.gz \
+    && chmod +x /usr/local/bin/gws && gws --version
+
 COPY --from=builder /app/zeroclaw /usr/local/bin/zeroclaw
-COPY --from=api-generator /usr/local/bin/gws /usr/local/bin/gws
 COPY --from=builder /zeroclaw-data /zeroclaw-data
 COPY --from=builder /usr/share/zeroclaw /usr/share/zeroclaw
 COPY entrypoint.sh /usr/local/bin/entrypoint.sh
