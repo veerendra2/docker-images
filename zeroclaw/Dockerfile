@@ -19,6 +19,8 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
     apt-get update && apt-get install -y --no-install-recommends npm \
     && rm -rf /var/lib/apt/lists/*
 
+RUN npm install -g @googleworkspace/cli
+
 RUN --mount=type=cache,id=zeroclaw-cargo-registry,target=/usr/local/cargo/registry,sharing=locked \
     --mount=type=cache,id=zeroclaw-cargo-git,target=/usr/local/cargo/git,sharing=locked \
     --mount=type=cache,id=zeroclaw-target,target=/app/target,sharing=locked \
@@ -72,13 +74,15 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         zip unzip openssh-client rsync vim \
         jq wget tree less procps net-tools iputils-ping file \
     && rm -rf /var/lib/apt/lists/* \
-    && useradd -m -d /zeroclaw-data -s /bin/bash zeroclaw
+    && groupadd -g 42617 zeroclaw \
+    && useradd -m -d /zeroclaw-data -u 42617 -g 42617 -s /bin/bash zeroclaw
 
 ARG GOSU_VERSION=1.19
 RUN curl -fsSL "https://github.com/tianon/gosu/releases/download/${GOSU_VERSION}/gosu-$(dpkg --print-architecture)" \
       -o /usr/local/bin/gosu && chmod +x /usr/local/bin/gosu && gosu --version
 
 COPY --from=builder /app/zeroclaw /usr/local/bin/zeroclaw
+COPY --from=api-generator /usr/local/bin/gws /usr/local/bin/gws
 COPY --from=builder /zeroclaw-data /zeroclaw-data
 COPY --from=builder /usr/share/zeroclaw /usr/share/zeroclaw
 COPY entrypoint.sh /usr/local/bin/entrypoint.sh
