@@ -74,7 +74,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         zip unzip openssh-client rsync vim \
         jq wget tree less procps net-tools iputils-ping file \
     && rm -rf /var/lib/apt/lists/* \
-    && useradd -m -d /zeroclaw-data -s /bin/bash zeroclaw
+    && groupadd -g 42617 zeroclaw \
+    && useradd -m -d /zeroclaw-data -u 42617 -g 42617 -s /bin/bash zeroclaw
 
 ARG GOSU_VERSION=1.19
 RUN curl -fsSL "https://github.com/tianon/gosu/releases/download/${GOSU_VERSION}/gosu-$(dpkg --print-architecture)" \
