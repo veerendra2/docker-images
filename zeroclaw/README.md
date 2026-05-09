@@ -94,7 +94,7 @@ A custom ZeroClaw Docker image built with full features enabled, including all m
 
 ## User
 
-The container runs as a non-root user `zeroclaw` (created via `useradd`) with home directory `/zeroclaw-data`.
+The container runs as a non-root user `zeroclaw` with **UID `42617` and GID `42617`** (created via `useradd`) to avoid permission collisions with standard host users (like `1000:1000`). Its home directory is `/zeroclaw-data`.
 
 ## Environment Variables
 
