@@ -8,6 +8,7 @@ Dockerfiles to build images with various tools mainly intend use in ci/cd pipeli
 
 | Docker Image                   | Tags                                                                                        | Size                                                                                        |
 | ------------------------------ | ------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------- |
+| `veerendra2/9router`          | ![Docker Image Version (tag)](https://img.shields.io/docker/v/veerendra2/9router)          | ![Docker Image Size](https://img.shields.io/docker/image-size/veerendra2/9router)          |
 | `veerendra2/ansible`           | ![Docker Image Version (tag)](https://img.shields.io/docker/v/veerendra2/ansible)           | ![Docker Image Size](https://img.shields.io/docker/image-size/veerendra2/ansible)           |
 | `veerendra2/ci-full`           | ![Docker Image Version (tag)](https://img.shields.io/docker/v/veerendra2/ci-full)           | ![Docker Image Size](https://img.shields.io/docker/image-size/veerendra2/ci-full)           |
 | `veerendra2/it-tools`          | ![Docker Image Version (tag)](https://img.shields.io/docker/v/veerendra2/utils)             | ![Docker Image Size](https://img.shields.io/docker/image-size/veerendra2/utils)             |
