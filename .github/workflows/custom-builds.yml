@@ -12,7 +12,7 @@ jobs:
     runs-on: namespace-profile-docker-images
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Setup Qemu
         uses: docker/setup-qemu-action@v4

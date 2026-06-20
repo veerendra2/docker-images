@@ -22,7 +22,7 @@ jobs:
       matrix: ${{ steps.setup-matrix.outputs.matrix }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           fetch-depth: 0
       - name: Setup Matrix
@@ -47,7 +47,7 @@ jobs:
         docker-dir: ${{ fromJSON(needs.setup-matrix.outputs.matrix) }}
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Setup Qemu
         uses: docker/setup-qemu-action@v4
